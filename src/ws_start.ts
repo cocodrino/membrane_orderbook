@@ -1,6 +1,6 @@
-import WSBooks from '@/websocket/WSBooks';
-import { WS_PAIR } from '@config';
+import OrderbookService from '@services/orderbook.service';
+import { WS_PAIRS } from '@config';
 
-const ws = new WSBooks(WS_PAIR);
+const ws = new OrderbookService(WS_PAIRS);
 
 export default ws;

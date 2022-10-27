@@ -6,13 +6,11 @@ node bfx_test_book.js BTCUSD
 
 const WS = require('ws');
 const _ = require('lodash');
-const async = require('async');
 const fs = require('fs');
-const moment = require('moment');
 const CRC = require('crc-32');
 const path = require('path');
 
-const pair = process.argv[2];
+const pair = 'BTCUSD';
 
 const conf = {
   wshost: 'wss://api.bitfinex.com/ws/2',
@@ -47,6 +45,7 @@ function connect() {
     BOOK.mcnt = 0;
     cli.send(JSON.stringify({ event: 'conf', flags: 65536 + 131072 }));
     cli.send(JSON.stringify({ event: 'subscribe', channel: 'book', pair: pair, prec: 'P0', len: 100 }));
+    cli.send(JSON.stringify({ event: 'subscribe', channel: 'book', pair: 'ETHUSD', prec: 'P0', len: 100 }));
   });
 
   cli.on('close', function open() {
@@ -58,6 +57,7 @@ function connect() {
 
   cli.on('message', function (msg) {
     msg = JSON.parse(msg);
+    console.log(msg);
 
     if (msg.event) return;
 
@@ -96,16 +96,6 @@ function connect() {
 
       console.log('cs_str ', cs_str, ' cs_calc ', cs_calc);
 
-      fs.appendFileSync(
-        logfile,
-        '[' +
-          moment().format('YYYY-MM-DDTHH:mm:ss.SSS') +
-          '] ' +
-          pair +
-          ' | ' +
-          JSON.stringify(['cs_string=' + cs_str, 'cs_calc=' + cs_calc, 'server_checksum=' + checksum]) +
-          '\n',
-      );
       if (cs_calc !== checksum) {
         console.error('CHECKSUM_FAILED');
         process.exit(-1);
@@ -121,7 +111,6 @@ function connect() {
         const side = pp.amount >= 0 ? 'bids' : 'asks';
         pp.amount = Math.abs(pp.amount);
         if (BOOK[side][pp.price]) {
-          fs.appendFileSync(logfile, '[' + moment().format() + '] ' + pair + ' | ' + JSON.stringify(pp) + ' BOOK snap existing bid override\n');
         }
         BOOK[side][pp.price] = pp;
       });
@@ -160,7 +149,6 @@ function connect() {
         }
 
         if (!found) {
-          fs.appendFileSync(logfile, '[' + moment().format() + '] ' + pair + ' | ' + JSON.stringify(pp) + ' BOOK delete fail side not found\n');
         }
       } else {
         let side = pp.amount >= 0 ? 'bids' : 'asks';
@@ -202,9 +190,6 @@ function checkCross(msg) {
   let bid = BOOK.psnap.bids[0];
   let ask = BOOK.psnap.asks[0];
   if (bid >= ask) {
-    let lm = [moment.utc().format(), 'bid(' + bid + ')>=ask(' + ask + ')'];
-    fs.appendFileSync(logfile, lm.join('/') + '\n');
-    console.log(lm.join('/'));
   }
 }
 
