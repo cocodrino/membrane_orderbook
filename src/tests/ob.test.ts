@@ -26,7 +26,7 @@ describe('testing orderbook controller', () => {
       const app = new App([OrderBookController]);
       const req = request(app.getServer()).get('/orderbook/tick/SOLUSD');
 
-      return req.expect(500);
+      return req.expect(400);
     });
   });
 

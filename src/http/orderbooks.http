@@ -1,0 +1,56 @@
+
+###
+# WORKS
+GET http://localhost:3000/orderbook/tick/BTCUSD
+
+###
+# MUST RETURN ERROR
+GET http://localhost:3000/orderbook/tick/SOLUSD
+
+
+###
+# WORKS
+POST http://localhost:3000/orderbook/price
+Content-Type: application/json
+
+{
+  "pair": "BTCUSD",
+  "amount": 31500,
+  "operation" : "buy"
+
+}
+
+###
+# MUST RETURN ERROR
+POST http://localhost:3000/orderbook/price
+Content-Type: application/json
+
+{
+  "pair": "BTCUSD",
+  "amount": -31500,
+  "operation" : "buy"
+
+}
+
+###
+# MUST RETURN ERROR
+POST http://localhost:3000/orderbook/price
+Content-Type: application/json
+
+{
+  "pair": "SOLUSD",
+  "amount": 31500,
+  "operation" : "buy"
+
+}
+
+###
+# MUST RETURN ERROR
+POST http://localhost:3000/orderbook/price
+Content-Type: application/json
+
+{
+  "pair": "BTC",
+  "amount": 31500,
+  "operation": "change"
+}

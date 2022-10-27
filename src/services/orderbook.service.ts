@@ -75,7 +75,7 @@ class OrderbookService {
     }
 
     const bidOrAsk = operation === 'buy' ? 'asks' : 'bids';
-    const data = this.orderBooks.get(symbol)[bidOrAsk];
+    const data = this.orderBooks.get(symbol)?.[bidOrAsk];
 
     if (!data) return;
 
@@ -120,6 +120,7 @@ class OrderbookService {
     if (!this.wsInstance) console.error('no ws instance');
 
     this.wsInstance.on('open', this.onOpen.bind(this));
+    return this;
   }
 
   private async restart() {

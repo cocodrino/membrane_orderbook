@@ -1,15 +1,14 @@
 import { BadRequestError, Body, Controller, Get, NotFoundError, Param, Post, UseBefore } from 'routing-controllers';
-import OrderbookService from '@services/orderbook.service';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { EffectivePriceDTO } from '@dtos/orderbook.dto';
-import { WS_PAIRS } from '@config';
 import { FinalPriceResponse, OrderBook, Tick } from '@interfaces/orderbook.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { validationMiddleware } from '@middlewares/validation.middleware';
+import { orderbookService } from '@services/instances/orderbook';
 
 @Controller()
 export class OrderBookController {
-  public ob = new OrderbookService(WS_PAIRS);
+  public ob = orderbookService;
 
   //not required by the test but useful for debugging
   @Get('/orderbook/:symbol')
@@ -30,7 +29,7 @@ export class OrderBookController {
     const data: Tick | undefined = await this.ob.getTick(symbol.toUpperCase());
 
     if (!data) {
-      throw new NotFoundError('symbol not found');
+      throw new HttpException(400, 'data not found for the symbol');
     }
 
     return { tick: data };
@@ -43,7 +42,7 @@ export class OrderBookController {
     const response: FinalPriceResponse | undefined = await this.ob.getFinalPrice(data.pair, data.operation, data.amount);
 
     if (!response) {
-      throw new BadRequestError('pair not found');
+      throw new HttpException(400, 'data not found for the symbol');
     }
 
     return response;
