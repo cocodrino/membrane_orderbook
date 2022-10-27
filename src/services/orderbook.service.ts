@@ -24,9 +24,8 @@ class OrderbookService {
     this.wshost = host;
     this.pairs = pairs;
 
-    this.wsInstance = new WS(this.wshost, {
-      /* rejectUnauthorized: false */
-    });
+
+
   }
 
   private getPairFromChanID(chanID: number): string {
@@ -116,6 +115,10 @@ class OrderbookService {
   }
 
   listen() {
+    this.wsInstance = new WS(this.wshost, {
+      /* rejectUnauthorized: false */
+    });
+
     console.info('=====Start listening WS ===========');
     if (!this.wsInstance) console.error('no ws instance');
 

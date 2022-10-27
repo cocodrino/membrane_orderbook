@@ -1,4 +1,7 @@
 
+### NOT REQUIRED ==============
+GET http://localhost:3000/orderbook/book/BTCUSD
+
 ###
 # WORKS
 GET http://localhost:3000/orderbook/tick/BTCUSD

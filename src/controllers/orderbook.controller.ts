@@ -11,28 +11,28 @@ export class OrderBookController {
   public ob = orderbookService;
 
   //not required by the test but useful for debugging
-  @Get('/orderbook/:symbol')
+  @Get('/orderbook/book/:symbol')
   @OpenAPI({ summary: 'Return orderbook for introduced symbol' })
   getOrderBook(@Param('symbol') symbol: string) {
-    const data: OrderBook | undefined = this.ob.getOrderBook(symbol.toUpperCase());
+    const orderbook: OrderBook | undefined = this.ob.getOrderBook(symbol.toUpperCase());
 
-    if (!data) {
+    if (!orderbook) {
       throw new HttpException(400, 'data not found for the symbol');
     }
 
-    return { orderbook: data };
+    return { orderbook };
   }
 
   @Get('/orderbook/tick/:symbol')
   @OpenAPI({ summary: 'Return bid and ask price' })
   async getTick(@Param('symbol') symbol: string) {
-    const data: Tick | undefined = await this.ob.getTick(symbol.toUpperCase());
+    const tick: Tick | undefined = await this.ob.getTick(symbol.toUpperCase());
 
-    if (!data) {
+    if (!tick) {
       throw new HttpException(400, 'data not found for the symbol');
     }
 
-    return { tick: data };
+    return { tick };
   }
 
   @Post('/orderbook/price')
