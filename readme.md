@@ -6,6 +6,8 @@ npm install
 npm run dev
 ```
 
+#### if you are using other package manager instead of npm you need replace the npm command in the package.json
+
 ## Project structure
 Importants files are
 
